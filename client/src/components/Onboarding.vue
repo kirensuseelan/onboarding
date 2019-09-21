@@ -12,34 +12,34 @@
         class="shadow bg-white rounded"
         header="Team Onboarding Goals"
         header-tag="header"
-        >
+      >
         <b-card-group deck>
-          <b-card
-            class="goalcards shadow bg-white rounded"
-            v-for="goal in goals"
-            :key="goal.id"
-            :header="goal.name"
-            header-tag="header"
-            :sub-title="goal.Description"
-          >
-            <!-- v-bind:bg-variant="{ dark: goal.isActive }" v-bind:bg-textvariant="{ white: !goal.isActive }"-->
-            <div style="text-align:right">
-              <i
+          <div v-if="goals" class="goalcards">
+            <b-card
+              class="cardsCustom shadow bg-white rounded"
+              v-for="goal in goals"
+              :key="goal.Id"
+              :header="goal.Name"
+              header-tag="header"
+              :sub-title="goal.Description"
+            >
+              <div style="text-align:right">
+                <i
                   class="far fa-check-circle fa-2x"
                   style="cursor:pointer"
                   @click="addGoals(goal)"
                   v-bind:class="{ included: goal.isActive }"
                   v-show="!goal.isActive"
-                ></i
-              >
-              <i
-                class="far fa-times-circle fa-2x"
-                v-bind:class="{ deleteenabled: goal.isActive }"
-                @click="removeGoals(goal)"
-                 v-show="goal.isActive"
-              ></i>
-            </div>
-          </b-card>
+                ></i>
+                <i
+                  class="far fa-times-circle fa-2x"
+                  v-bind:class="{ deleteenabled: goal.isActive }"
+                  @click="removeGoals(goal)"
+                  v-show="goal.isActive"
+                ></i>
+              </div>
+            </b-card>
+          </div>
         </b-card-group>
       </b-card>
     </div>
@@ -50,31 +50,32 @@
         header-tag="header"
       >
         <b-card-group deck>
-          <b-card
-            class="goalcards shadow bg-white rounded"
-            v-for="technique in techiques.sort(x => x.isActive ? -1 : 1)"
-            :key="technique.id"
-            :header="technique.name"
-            header-tag="header"
-            :sub-title="technique.Description"
-          >
-            <!-- v-bind:bg-variant="{ dark: goal.isActive }" v-bind:bg-textvariant="{ white: !goal.isActive }"-->
-            <div style="text-align:right">
-              <i
+          <div v-if="techiques" class="goalcards">
+            <b-card
+              class="cardsCustom shadow bg-white rounded"
+              v-for="technique in techiques"
+              :key="technique.Id"
+              :header="technique.Name"
+              header-tag="header"
+              :sub-title="technique.Description"
+            >
+              <!-- v-bind:bg-variant="{ dark: goal.isActive }" v-bind:bg-textvariant="{ white: !goal.isActive }"-->
+              <div style="text-align:right">
+                <i
                   class="far fa-check-circle fa-2x"
                   @click="addTechnique(technique)"
                   v-bind:class="{ included: technique.isActive }"
                   v-show="!technique.isActive"
-                ></i
-              >
-              <i
-                class="far fa-times-circle fa-2x"
-                @click="removeTechnique(technique)"
-                v-bind:class="{ deleteenabled: technique.isActive }"
-                v-show="technique.isActive"
-              ></i>
-            </div>
-          </b-card>
+                ></i>
+                <i
+                  class="far fa-times-circle fa-2x"
+                  @click="removeTechnique(technique)"
+                  v-bind:class="{ deleteenabled: technique.isActive }"
+                  v-show="technique.isActive"
+                ></i>
+              </div>
+            </b-card>
+          </div>
         </b-card-group>
       </b-card>
     </div>
@@ -82,6 +83,9 @@
 </template>
 
 <script>
+import goalsApi from "@/services/goalsAPI";
+import techniquesApi from "@/services/techniquesAPI";
+
 export default {
   name: "Onboarding",
   props: {
@@ -89,129 +93,52 @@ export default {
   },
   data() {
     return {
-       sortKey: '',
-      goals: [
-        {
-          id: 1,
-          name: "Goal 1",
-          Description: "Goal 1 Description",
-          isActive: true
-        },
-        {
-          id: 2,
-          name: "Goal 2",
-          Description: "Goal 2 Description",
-          isActive: true
-        },
-        {
-          id: 3,
-          name: "Goal 3",
-          Description: "Goal 3 Description",
-          isActive: false
-        },
-        {
-          id: 4,
-          name: "Goal 4",
-          Description: "Goal 4 Description",
-          isActive: false
-        },
-        {
-          id: 5,
-          name: "Goal 5",
-          Description: "Goal 5 Description",
-          isActive: false
-        }
-      ],
-      techiques: [
-        {
-          id: 1,
-          name: "Techique 1",
-          Description: "Techique 1 Description",
-          isActive: true
-        },
-        {
-          id: 2,
-          name: "Techique 2",
-          Description: "Techique 2 Description",
-          isActive: true
-        },
-        {
-          id: 3,
-          name: "Techique 3",
-          Description: "Techique 3 Description",
-          isActive: false
-        },
-        {
-          id: 4,
-          name: "Techique 4",
-          Description: "Techique 4 Description",
-          isActive: false
-        },
-        {
-          id: 5,
-          name: "Techique 5",
-          Description: "Techique 5 Description",
-          isActive: false
-        },
-        {
-          id: 6,
-          name: "Techique 6",
-          Description: "Techique 6 Description",
-          isActive: true
-        },
-        {
-          id: 7,
-          name: "Techique 7",
-          Description: "Techique 7 Description",
-          isActive: true
-        },
-        {
-          id: 8,
-          name: "Techique 8",
-          Description: "Techique 8 Description",
-          isActive: false
-        },
-        {
-          id: 9,
-          name: "Techique 9",
-          Description: "Techique 9 Description",
-          isActive: false
-        },
-        {
-          id: 10,
-          name: "Techique 10",
-          Description: "Techique 10 Description",
-          isActive: false
-        }
-      ]
+      goals: [],
+      techiques: [],
+      selectedGoals: String
     };
   },
-   methods: {
-     
-    addGoals(activatedGoal) {
-      activatedGoal.isActive=true
-      var ref = this
-      ref.randomActivateTechnique()
+  methods: {
+    async fetchGoal() {
+      var self = this;
+      const response = await goalsApi.fetchGoalsCollection();
+      self.goals = response;
+      self.selectedGoals = "";
     },
-    removeGoals(selectedGoal) {
-      selectedGoal.isActive=false
-       var ref = this
-      ref.randomActivateTechnique()
+    async fetchTechnique() {
+      var self = this;
+      const response = await techniquesApi.fetchMappedTechniques(
+        self.selectedGoals
+      );
+      self.techiques = response;
+    },
+    addGoals(activatedGoal) {
+      var self = this;
+      var goals = self.selectedGoals;
+      goals = goals + "," + activatedGoal.Id;
+      self.selectedGoals = goals;
+      activatedGoal.isActive = true;
+      this.fetchTechnique();
+    },
+    removeGoals(deselectedGoal) {
+      var self = this;
+      var goals = self.selectedGoals;
+      goals = goals.replace("," + deselectedGoal.Id, "");
+      self.selectedGoals = goals;
+      console.log(self.selectedGoals);
+      this.fetchTechnique();
+      deselectedGoal.isActive = false;
     },
     addTechnique(activatedtech) {
-      activatedtech.isActive=true
+      activatedtech.isActive = true;
     },
     removeTechnique(removedTech) {
-      removedTech.isActive=false
-    },
-    randomActivateTechnique (){
-      var ref = this
-      for(var i = Math.floor(Math.random() * 10); i <= ref.techiques.length; i++) {
-        ref.techiques[i].isActive=! ref.techiques[i].isActive;
-      }
-      
+      removedTech.isActive = false;
     }
-    
+  },
+  mounted() {
+    this.fetchGoal();
+    this.fetchTechnique();
   }
 };
 </script>
@@ -235,10 +162,11 @@ export default {
   z-index: 9999;
   width: 100% !Important;
   flex: none !Important;
-  margin-bottom: 15px !Important;
   margin-left: 0px !Important;
 }
-
+.cardsCustom {
+  margin-bottom: 10px !Important;
+}
 .cardremoveborder {
   border: none !important;
 }
