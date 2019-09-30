@@ -212,13 +212,42 @@ export default {
         const response = await scenariosApi.fetchCharacteristcsCollectionWithScenarioID(
           self.selected.Id
         );
-        console.log(response);
-        self.characteristicsGroup = response;
+        self.characteristicsGroup = response.CharacteristicsGroup;
+        self.selectedGoals=response.selectedgoals;
+        self.setGoalsSelected();
+      }
+      else{
+        self.fetchCharacteristics();
+        self.selectedGoals="";
+         self.goals.forEach(goal=>{
+           goal.isActive=false;
+        });
+        self.fetchTechnique();
       }
     },
     finished(value) {
       this.selectedGoals = value.userSelectedGoals;
       this.fetchTechnique();
+    },
+    setGoalsSelected(){
+      var self = this;
+      if(self.selectedGoals){
+          var selectedgoalIDs = self.selectedGoals.split(",");
+          self.goals.forEach(goal=>{
+          selectedgoalIDs.forEach(goalId=>{
+            if(goal.Id==goalId){
+              goal.isActive=true;
+            }
+          });
+        });   
+      }
+      else{
+         self.goals.forEach(goal=>{
+           goal.isActive=false;
+        });
+      }
+      self.goals.sort(function(a, b) {  return b.isActive - a.isActive });
+      self.fetchTechnique();
     },
     setselectedGoal(selectedobject) {
       var self = this;

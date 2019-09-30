@@ -5,6 +5,7 @@ var onBoardingCharacteristicGroup=function(characteristicGroup){
     this.Name=characteristicGroup.Name;
     this.Description=characteristicGroup.Description;
     this.charecteristicsMapped=[];
+    
 };
 
 var onBoardingCharacteristics=function(characteristics){
@@ -14,6 +15,7 @@ var onBoardingCharacteristics=function(characteristics){
     this.answersMapped=[];
     this.AnsweredID=0;
     this.AnsweredText="";
+    
 };
 
 var onBoardingCharacteristicsAnswer=function(answer){
@@ -25,7 +27,8 @@ var onBoardingScenario=function(scenario){
     this.Id=scenario.scenarioID;
     this.Name=scenario.scenario;
     this.Description=scenario.scenarioDescription;
-    this.CharacteristicsGroup=[];
+    this.CharacteristicsGroup=[]; 
+    this.selectedgoals="";
 };
 
 
@@ -73,6 +76,7 @@ function structureCharacteristics(res){
                     characteristic.AnsweredText=answered[0].answerText;
                 }
             }
+           
             questiongroup.push(characteristic);
         });
         chargroup.charecteristicsMapped.push(questiongroup);
@@ -107,11 +111,23 @@ onBoardingCharacteristicGroup.getScenario_ByID = function (ScenarioID, result) {
             result(null, err);
         }
         else{
+            var onbScenario;
             var characteristicsGroupCollection=[];
             characteristicsGroupCollection= structureCharacteristics(res);
-          result(null, characteristicsGroupCollection);
+            if(res[5] != null){
+                res[5].forEach(scen=>{
+                    onbScenario=new onBoardingScenario(scen);
+                })
+            }
+            if(res[4] != null){
+                onbScenario.selectedgoals=res[4][0].selectedgoalID;
+            }
+            onbScenario.CharacteristicsGroup=characteristicsGroupCollection;
+          result(null, onbScenario);
         }
 });
+
+
 };
 
 

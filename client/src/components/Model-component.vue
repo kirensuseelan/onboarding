@@ -85,7 +85,6 @@ export default {
     },
     updateParentToRemove() {
       this.recievedData.data.isActive = false;
-      this.$emit("finished", this.recievedData);
       this.$bvModal.hide("ModelComponent");
     }
   }
