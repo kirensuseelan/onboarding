@@ -11,7 +11,7 @@ exports.list_all_Techniques = function(req, res) {
   };
 
   exports.get_a_techniqueById = function(req, res) {
-    onBoardingTechniques.getTechniquesById(req.params.techniqueID, function(err, onBoardingTechniques) {
+    onBoardingTechniques.getTechniquesById(req.params.techniquesId, function(err, onBoardingTechniques) {
       if (err)
         res.send(err);
       res.json(onBoardingTechniques);
