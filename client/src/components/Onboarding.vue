@@ -11,6 +11,10 @@
       <h1 style="margin-top:2%;">{{ msg }}</h1>
     </div>
     <div Class="Application">
+      <Model-component
+          :recievedData="selectedItem"
+          @finished="finished"
+        ></Model-component>
       <div class="characteristics">
         <b-card
           class="shadow bg-white rounded"
@@ -56,17 +60,14 @@
           </b-card-group>
         </b-card>
       </div>
-      <div id="goals">
-        <Model-component
-          :recievedData="selectedItem"
-          @finished="finished"
-        ></Model-component>
+      <div class="goals">
+        
         <b-card
           class="shadow bg-white rounded"
-          header="Team Onboarding Goals"
+          header="Recommended Team Onboarding Goals"
           header-tag="header"
         >
-          <b-card-group deck>
+          <!-- <b-card-group deck>
             <div v-if="goals" class="goalcards">
               <b-card
                 class="cardsCustom shadow bg-white rounded"
@@ -110,21 +111,108 @@
                 </div>
               </b-card>
             </div>
-          </b-card-group>
+          </b-card-group> -->
+      <table class="table">
+        <thead>
+          <tr>
+            <td><strong>ID</strong></td>
+            <td><strong>Goals</strong></td>
+            <td>Included</td>
+            <td>Supported By</td>
+          </tr>
+        </thead>
+        <tbody>
+          <tr  v-for="goal in goals"
+                  :key="goal.Id">
+            <td class="tablecolumnIDText"><span data-tooltip=""  data-tooltip-position="bottom"  >{{goal.Name}}</span></td>
+            <td  class="tablecolumnText"><a href="#"  v-b-modal.ModelComponent @click="setselectedGoal(goal)" ><span>{{goal.Description}}</span></a></td>
+            <td>
+               <div style="">
+                <div v-show="!goal.isActive" >
+                     <i
+                        class="far fa-check-circle fa-2x"
+                        @click="addGoals(goal)"
+                      ></i>
+                </div>
+                <div v-show="goal.isActive">
+                      <i
+                        class="far fa-times-circle fa-2x deleteenabled"
+                        @click="removeGoals(goal)"
+                      ></i>
+                </div>
+                    </div>
+            </td>
+            <td></td>
+          </tr>
+        </tbody>
+      </table>
+
         </b-card>
       </div>
       <div class="techniques">
         <b-card
           class="shadow bg-white rounded"
-          header="Team Onboarding Techniques"
+          header="Recommended Team Onboarding Techniques"
           header-tag="header"
         >
-          <b-card-group deck>
+        <!-- <b-table
+      :items="techniques"
+      :fields="Techniquesfields">
+       <template v-slot:cell(isActive)="row">
+         
+         <div style="">
+                <div v-show="!row.isActive" :key="row.Name">
+                     <i
+                        class="far fa-check-circle fa-2x"
+                        @click="addTechnique(row)"
+                      ></i>
+                </div>
+                <div v-show="row.isActive" :key="row.Name">
+                      <i
+                        class="far fa-times-circle fa-2x deleteenabled"
+                        @click="removeTechnique(row)"
+                      ></i>
+                </div>
+                    </div>
+       </template>
+      </b-table> -->
+      <table class="table">
+        <thead>
+          <tr>
+            <td><strong>ID</strong></td>
+            <td><strong>Techniques</strong></td>
+            <td>Included</td>
+            <td>Contributes To</td>
+          </tr>
+        </thead>
+        <tbody>
+          <tr  v-for="technique in techniques"
+                  :key="technique.Id">
+            <td class="tablecolumnIDText"><span :data-tooltip="technique.DetailedDescription"  data-tooltip-position="bottom" >{{technique.Name}}</span></td>
+            <td class="tablecolumnText"><a href="#"  v-b-modal.ModelComponent @click="setselectedTechnique(technique)" ><span >{{technique.Description}}</span></a></td>
+            <td>
+               <div style="">
+                <div v-show="!technique.isActive" >
+                     <i
+                        class="far fa-check-circle fa-2x"
+                        @click="addTechnique(technique)"
+                      ></i>
+                </div>
+                <div v-show="technique.isActive">
+                      <i
+                        class="far fa-times-circle fa-2x deleteenabled"
+                        @click="removeTechnique(technique)"
+                      ></i>
+                </div>
+                    </div>
+            </td>
+            <td></td>
+          </tr>
+        </tbody>
+      </table>
+
+          <!-- <b-card-group deck>
             <div v-if="techniques" class="goalcards">
-              <div>
-                <!-- <div class="ajax_loader hidden" ref="hidden"><i class="fa fa-spinner fa-spin"></i></div> -->
-                <!-- <b-spinner label="Spinning" class="loaderTechniques"></b-spinner> -->
-              </div>
               <div>
                 <b-card
                   class="cardsCustom shadow bg-white rounded"
@@ -166,7 +254,7 @@
                 </b-card>
               </div>
             </div>
-          </b-card-group>
+          </b-card-group> -->
         </b-card>
       </div>
     </div>
@@ -202,7 +290,24 @@ export default {
         type: String,
         data: Object,
         userSelectedGoals: String
-      }
+      },
+       Techniquesfields: [
+          {
+            key: 'Name',
+            label: 'Techniques Id',
+            sortable: true
+          },
+          {
+            key: 'Description',
+            label: 'Techniques',
+            sortable: true
+          },
+          {
+            key: 'isActive',
+            label: 'Included',
+            sortable: true,
+          }
+        ],
     };
   },
   methods: {
@@ -302,8 +407,10 @@ export default {
             }
           });
         });
+
       }
       self.techniques = response;
+      console.log(response);
     },
     addGoals(activatedGoal) {
       var self = this;
@@ -327,6 +434,7 @@ export default {
       tech = tech + "," + activatedtech.Id;
       self.selectedTechniques = tech;
       activatedtech.isActive = true;
+      console.log('tech add');
     },
     removeTechnique(removedTech) {
       var self = this;
@@ -360,9 +468,8 @@ export default {
 .buttonDetail {
   float: left;
 }
-#goals {
+.goals {
   width: 45%;
-
   margin-left: 10px;
   display: inline-block;
 }
@@ -371,14 +478,12 @@ export default {
 }
 .techniques {
   width: 45%;
-
   margin-left: 10px;
   display: inline-block;
 }
 .characteristics {
   width: 45%;
   margin-left: 10px;
-
   display: inline-block;
 }
 .goalcards {
@@ -453,6 +558,129 @@ export default {
 .description {
   width: 100%;
   float: left;
+  text-align: left;
+}
+.tablecolumnIDText{
+  border:none;
+  width:25%;
+  white-space: pre-wrap;
+  margin-left: 10px;
+  text-align: center;
+}
+.tablecolumnText{
+  border:none;
+  width:100%;
+  white-space: pre-wrap;
+  margin-left: 10px;
+  text-align: left;
+}
+[data-tooltip] {
+    display: inline-block;
+    position: relative;
+    cursor: help;
+    padding: 4px;
+}
+/* Tooltip styling */
+[data-tooltip]:before {
+    content: attr(data-tooltip);
+    display: none;
+    position: absolute;
+    background: #000;
+    color: #fff;
+    padding: 4px 8px;
+    font-size: 14px;
+    line-height: 1.4;
+    min-width: 300px;
+    text-align: center;
+    border-radius: 4px;
+}
+/* Dynamic horizontal centering */
+[data-tooltip-position="top"]:before,
+[data-tooltip-position="bottom"]:before {
+    left: 50%;
+    -ms-transform: translateX(-50%);
+    -moz-transform: translateX(-50%);
+    -webkit-transform: translateX(-50%);
+    transform: translateX(-50%);
+}
+/* Dynamic vertical centering */
+[data-tooltip-position="right"]:before,
+[data-tooltip-position="left"]:before {
+    top: 50%;
+    -ms-transform: translateY(-50%);
+    -moz-transform: translateY(-50%);
+    -webkit-transform: translateY(-50%);
+    transform: translateY(-50%);
+}
+[data-tooltip-position="top"]:before {
+    bottom: 100%;
+    margin-bottom: 6px;
+}
+[data-tooltip-position="right"]:before {
+    left: 100%;
+    margin-left: 6px;
+}
+[data-tooltip-position="bottom"]:before {
+    top: 100%;
+    margin-top: 6px;
+}
+[data-tooltip-position="left"]:before {
+    right: 100%;
+    margin-right: 6px;
+}
+
+/* Tooltip arrow styling/placement */
+[data-tooltip]:after {
+    content: '';
+    display: none;
+    position: absolute;
+    width: 0;
+    height: 0;
+    border-color: transparent;
+    border-style: solid;
+}
+/* Dynamic horizontal centering for the tooltip */
+[data-tooltip-position="top"]:after,
+[data-tooltip-position="bottom"]:after {
+    left: 50%;
+    margin-left: -6px;
+}
+/* Dynamic vertical centering for the tooltip */
+[data-tooltip-position="right"]:after,
+[data-tooltip-position="left"]:after {
+    top: 50%;
+    margin-top: -6px;
+}
+[data-tooltip-position="top"]:after {
+    bottom: 100%;
+    border-width: 6px 6px 0;
+    border-top-color: #000;
+}
+[data-tooltip-position="right"]:after {
+    left: 100%;
+    border-width: 6px 6px 6px 0;
+    border-right-color: #000;
+}
+[data-tooltip-position="bottom"]:after {
+    top: 100%;
+    border-width: 0 6px 6px;
+    border-bottom-color: #000;
+}
+[data-tooltip-position="left"]:after {
+    right: 100%;
+    border-width: 6px 0 6px 6px;
+    border-left-color: #000;
+}
+/* Show the tooltip when hovering */
+[data-tooltip]:hover:before,
+[data-tooltip]:hover:after {
+    display: block;
+    z-index: 50;
+}
+.tablecolumnIDTextGoal{
+  width:50px;
+}
+.tablecolumnTextGoal{
   text-align: left;
 }
 </style>
