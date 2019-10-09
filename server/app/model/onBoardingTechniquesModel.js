@@ -1,25 +1,46 @@
 var sql = require('./db.js');
 
 var onBoardingTechniques=function(onBoardingTechnique){
-    this.Id=onBoardingTechnique.TechniquesId;
+    this.Id=onBoardingTechnique.TechniquesID;
     this.Name=onBoardingTechnique.Name;
     this.Description=onBoardingTechnique.Description;
+    this.DetailedDescription=onBoardingTechnique.DetailedDescription;
     this.isActive=false;
     this.OrderTech=1;
+    this.GoalsMapped=[];
 };
 
 
 onBoardingTechniques.getTechniquesById = function (techniqueID, result) {
-    sql.query("Select name from techniques where id = ? ", techniqueID, function (err, res) {             
+
+    // var query = sql.query("CALL get_techniquesByID(?)", techniqueID);
+    //     query
+    //     .on('error', function(err) {
+    //         result(err, null);
+    //       })
+    //     .on('result', function(res) {
+    //         var selectedtechnique =new onBoardingTechniques(res[0]);
+    //         selectedtechnique.GoalsMapped=res[1];
+    //         console.log(selectedtechnique);
+    //         result(null, selectedtechnique);
+    //     });
+    var sqlquery="CALL get_techniquesByID("+ techniqueID + ")";
+    sql.query(sqlquery , function (err, res) {             
             if(err) {
-                // console.log("error: ", err);
-                result(err, null);
+                console.log("error: ", err);
+                result(null, err);
             }
             else{
-                result(null, res);
-          
+
+                var selectedtechnique ;
+                res[0].forEach(tech => {
+                    selectedtechnique =new onBoardingTechniques(tech)
+                    selectedtechnique.GoalsMapped=res[1];
+                });
+                result(null, selectedtechnique);
             }
-        });   
+        });
+         
 };
 
 

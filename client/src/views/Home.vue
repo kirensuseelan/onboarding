@@ -1,7 +1,7 @@
 <template>
   <div class="home">
     <!-- <img alt="Vue logo" src="../assets/logo.png" /> -->
-    <Onboarding msg="Personalized Onboarding Design" />
+    <Onboarding msg="Personalized Onboarding Designer" />
   </div>
 </template>
 

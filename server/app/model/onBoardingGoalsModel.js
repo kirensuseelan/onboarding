@@ -37,4 +37,5 @@ onBoardingGoals.getAllGoals = function (result) {
         });   
 };
 
+
 module.exports= onBoardingGoals;

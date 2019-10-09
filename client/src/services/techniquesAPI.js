@@ -17,5 +17,13 @@ export default {
         return response.data;
       })
       .catch(error => console.log(error));
+  },
+  fetchTechniqueByID(techID) {
+    return axios
+      .get("techniques/" + techID)
+      .then(response => {
+        return response.data;
+      })
+      .catch(error => console.log(error));
   }
 };
